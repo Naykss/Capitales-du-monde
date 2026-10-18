@@ -366,12 +366,21 @@ body.training .hist-tab{opacity:.4;transition:opacity .3s}
 
 /* ---------- duel ---------- */
 .btn:disabled{opacity:.45;cursor:default}
-.btn-duel{background:linear-gradient(135deg,#B9A1FF,#8E6CF5);color:#130B2B;border-color:transparent;box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 10px 22px -12px rgba(0,0,0,.7)}
-.btn-duel:hover{background:linear-gradient(135deg,#C8B4FF,#9C7DFA)}
+.btn-verre{--t:143,224,157;color:#fff;border:1px solid rgba(var(--t),.42);
+  background:linear-gradient(180deg,rgba(var(--t),.30),rgba(var(--t),.14));
+  -webkit-backdrop-filter:blur(18px) saturate(170%);backdrop-filter:blur(18px) saturate(170%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 -1px 0 rgba(255,255,255,.06),0 10px 30px -14px rgba(var(--t),.75);text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.btn-verre:hover{background:linear-gradient(180deg,rgba(var(--t),.40),rgba(var(--t),.2));border-color:rgba(var(--t),.6)}
+.btn-verre.btn-duel{--t:169,139,255}
+/* partie perso du salon */
+.d-set{display:grid;gap:12px}
+.d-opt{display:grid;grid-template-columns:132px minmax(0,1fr);gap:12px;align-items:start}
+.d-ol{font-size:13.5px;font-weight:600;color:var(--encre-douce);padding-top:9px}
+.d-ov{display:grid;gap:6px}
 #duelUI{position:fixed;inset:0;z-index:15;overflow-y:auto;overscroll-behavior:contain;
   background:linear-gradient(90deg,rgba(8,12,20,.9),rgba(8,12,20,.62) 60%,rgba(8,12,20,.35));
   padding-left:max(16px,var(--gauche));padding-right:max(16px,var(--droite))}
-.duel-in{max-width:620px;padding:calc(var(--top) + 118px) 0 calc(var(--bas) + 40px) max(0px,calc(6vw - 16px));display:grid}
+.duel-in{max-width:700px;padding:calc(var(--top) + 118px) 0 calc(var(--bas) + 40px) max(0px,calc(6vw - 16px));display:grid}
 .d-scr{display:grid;gap:16px;align-content:start}
 .d-title{font-weight:600;font-size:clamp(2.8rem,1.2rem + 4.6vw,5.4rem);line-height:.9;letter-spacing:-.055em}
 .d-title.sm{font-size:clamp(2.2rem,1rem + 3.4vw,3.8rem)}
@@ -438,7 +447,7 @@ body.training .hist-tab{opacity:.4;transition:opacity .3s}
 .d-board .rk{font-size:18px;text-align:center;font-variant-numeric:tabular-nums}
 .d-board li:nth-child(1) .rk{color:#F5C84C} .d-board li:nth-child(2) .rk{color:#C9D1DD} .d-board li:nth-child(3) .rk{color:#D7955B}
 .d-board .tt{font-size:20px;text-align:right;font-variant-numeric:tabular-nums}
-.sqs{display:flex;gap:3px}
+.sqs{display:flex;flex-wrap:wrap;gap:3px}
 .sq{width:16px;height:16px;border-radius:4px;background:rgba(255,255,255,.07);background-size:cover;background-position:center}
 .sq.s0{background-color:var(--rate)} .sq.s1{background-color:var(--moyen)} .sq.s2{background-color:var(--ok)} .sq.s3{background-color:#1d2231}
 .sq.na{background:rgba(255,255,255,.05)}
@@ -559,8 +568,7 @@ body.pod-on .tab,body.pod-on .topline{opacity:0;pointer-events:none}
   .stat{padding:11px 12px} .stat span{font-size:12px}
   .mstats{grid-template-columns:repeat(2,minmax(0,1fr))}
   .seg button{padding:6px 11px;font-size:13px}
-  .lvls{gap:4px} .lv{padding:8px 6px 9px;gap:6px} .lv b{font-size:11.5px;white-space:normal} .bars i{width:6px}
-  .opts{padding:12px 12px 14px}
+  .d-opt{grid-template-columns:1fr;gap:6px} .d-ol{padding-top:0}
   .actions{gap:10px}
   .actions .btn-grand{min-height:3rem;padding:.7rem .5rem;font-size:.95rem;white-space:nowrap}
   .t-opt{padding:10px 12px 11px} .t-opt b{font-size:14.5px} .t-opt span{font-size:12px}
@@ -609,8 +617,8 @@ body.pod-on .tab,body.pod-on .topline{opacity:0;pointer-events:none}
     <h1 class="brand">Capitales du monde<i>.</i></h1>
     <p class="lede">Trouve la capitale, place le pays sur la carte, puis la capitale sur le pays. Jamais deux fois le même dans les 10 derniers.</p>
     <div class="actions">
-      <button class="btn btn-vert btn-grand" id="play" type="button">Jouer</button>
-      <button class="btn btn-grand btn-duel" id="openDuel" type="button">Duel</button>
+      <button class="btn btn-verre btn-grand" id="play" type="button">Jouer</button>
+      <button class="btn btn-verre btn-duel btn-grand" id="openDuel" type="button">Duel</button>
       <button class="btn btn-trait btn-grand" id="openTrain" type="button" aria-expanded="false" aria-controls="trainPick">Entraînement</button>
       <button class="btn btn-trait btn-grand" id="openList" type="button">Liste pays + stats</button>
     </div>
@@ -623,13 +631,11 @@ body.pod-on .tab,body.pod-on .topline{opacity:0;pointer-events:none}
         <button type="button" class="t-opt" data-t="place"><b>Capitale</b><span>Placer la capitale sur le pays</span></button>
       </div>
     </div>
-    <div class="opts plaque">
-      <div class="o-lab">Difficulté</div>
-      <div class="lvls" id="modes" role="radiogroup" aria-label="Difficulté"></div>
+    <div class="modes-wrap">
+      <div class="seg" id="modes" role="radiogroup" aria-label="Difficulté"></div>
       <p class="mode-desc" id="modeDesc"></p>
-      <div class="o-lab">Région</div>
-      <div class="regions" id="regions" role="group" aria-label="Région"></div>
     </div>
+    <div class="regions" id="regions" role="group" aria-label="Région"></div>
     <div class="legend" aria-label="Couleurs des résultats">
       <span><i class="sw s0"></i>0 bonne</span><span><i class="sw s1"></i>1</span><span><i class="sw s2"></i>2</span><span><i class="sw s3"></i>3 = le drapeau</span>
     </div>
@@ -679,10 +685,10 @@ body.pod-on .tab,body.pod-on .topline{opacity:0;pointer-events:none}
 <section id="duelUI" class="fade" hidden aria-label="Duel">
   <div class="duel-in">
     <div class="d-scr" data-s="setup">
-      <p class="eyebrow">Duel · 10 manches</p>
+      <p class="eyebrow">Duel · partie perso</p>
       <h2 class="d-title">Duel<i>.</i></h2>
       <p class="d-sub" id="dSetupSub">Crée un salon et envoie le lien à tes potes.</p>
-      <ul class="d-rules"><li>Tout le monde a le même pays en même temps.</li><li>Le premier qui répond laisse <b>7 secondes</b> aux autres.</li><li>0 à 3 points par manche, podium à la fin.</li></ul>
+      <ul class="d-rules"><li>Tout le monde a le même pays en même temps.</li><li>Le premier qui répond laisse <b>7 secondes</b> aux autres (réglable).</li><li>5 manches de base, 0 à 3 points chacune, podium à la fin.</li></ul>
       <label class="d-lab" for="dName">Ton pseudo</label>
       <input class="d-name" id="dName" type="text" maxlength="16" placeholder="Pseudo" autocomplete="nickname" spellcheck="false">
       <div class="d-row">
@@ -700,12 +706,12 @@ body.pod-on .tab,body.pod-on .topline{opacity:0;pointer-events:none}
       </div>
       <div class="o-lab d-plab">Joueurs <span id="dCount">1 / 12</span></div>
       <ul class="d-slots" id="dPlayers"></ul>
-      <div class="opts plaque d-set">
-        <div class="o-lab">Difficulté</div>
-        <div class="lvls" id="dModes" role="radiogroup" aria-label="Difficulté"></div>
-        <p class="mode-desc" id="dModeDesc"></p>
-        <div class="o-lab">Région</div>
-        <div class="regions" id="dRegs" role="group" aria-label="Région"></div>
+      <div class="d-set">
+        <div class="o-lab d-plab">Partie perso</div>
+        <div class="d-opt"><span class="d-ol">Manches</span><div class="seg" id="dRounds" role="radiogroup" aria-label="Nombre de manches"></div></div>
+        <div class="d-opt"><span class="d-ol">Temps par question</span><div class="seg" id="dWaitSel" role="radiogroup" aria-label="Temps laissé après la première réponse"></div></div>
+        <div class="d-opt"><span class="d-ol">Difficulté</span><div class="d-ov"><div class="seg" id="dModes" role="radiogroup" aria-label="Difficulté"></div><p class="mode-desc" id="dModeDesc"></p></div></div>
+        <div class="d-opt"><span class="d-ol">Région</span><div class="regions" id="dRegs" role="group" aria-label="Région"></div></div>
       </div>
       <div class="d-row">
         <button class="btn btn-vert btn-grand" id="dStart" type="button">Lancer la partie</button>
@@ -1051,7 +1057,6 @@ const TIER2 = new Set(('LU MT CY BG RS SK SI BA ME MK AL MD BY LT LV EE MC AD LI
 // palier 0 : les incontournables, 1 : connus, 2 : moyennement connus, 3 : les niches
 const TIER0 = new Set('FR DE IT ES PT GB BE CH NL GR SE NO IE RU US CA MX BR AR CN JP KR IN TR EG MA ZA AU'.split(' '));
 const tierOf = k => TIER0.has(k) ? 0 : TIER1.has(k) ? 1 : TIER2.has(k) ? 2 : 3;
-const LV_COL = ['#8FE09D', '#C9D86B', '#F5C84C', '#FFA36B', '#F0605A'];
 const TIER_NAMES = ['gros noob', 'facile', 'moyen', 'niche'];
 const MODES = [
   { n: 'Gros noob', d: 'Les pays que tout le monde connaît', w: [1, 0, 0, 0], fill: [1, 2, 3] },
@@ -2238,11 +2243,11 @@ function renderScore() {
 }
 
 /* ---------- difficulté ---------- */
-function levelsHtml(cur, off) {
-  return MODES.map((m, i) => `<button type="button" role="radio" class="lv" style="--lc:${LV_COL[i]}" data-m="${i}" aria-checked="${i === cur}"${off ? ' disabled' : ''}><b>${m.n}</b><span class="bars" aria-hidden="true">${[0, 1, 2, 3, 4].map(j => `<i${j <= i ? ' class="on"' : ''}></i>`).join('')}</span></button>`).join('');
+function segHtml(cur, off) {
+  return MODES.map((m, i) => `<button type="button" role="radio" data-m="${i}" aria-checked="${i === cur}"${off ? ' disabled' : ''}>${m.n}</button>`).join('');
 }
 function renderModes() {
-  $('#modes').innerHTML = levelsHtml(mode, false);
+  $('#modes').innerHTML = segHtml(mode, false);
   $('#modeDesc').textContent = MODES[mode].d;
 }
 $('#modes').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (!b) return; mode = +b.dataset.m; ls.set('mode2', mode); renderModes(); });
@@ -2474,7 +2479,11 @@ window.addEventListener('resize', () => {
    (le texte tapé, l'endroit cliqué) : c'est le chef qui corrige, avec les mêmes règles qu'en solo.
    Tout le monde a le même pays en même temps : le premier qui répond à une étape lance 7 s pour les autres,
    et les résultats de l'étape ne s'affichent qu'à la fin du temps. */
-const DN = window.__dN || 10, DWAIT = window.__dfast ? 20000 : 7000, DREVEAL = window.__dfast ? 1800 : 6500, DMAX = 12;
+const DREVEAL = window.__dfast ? 1800 : 6500, DMAX = 12;
+const ROUND_OPTS = [3, 5, 10, 15, 20], WAIT_OPTS = [5, 7, 10, 15, 20];
+const DEF_N = window.__dN || 5, DEF_W = window.__dfast ? 20 : 7;
+const gN = () => (duel && duel.S && duel.S.set && duel.S.set.n) || DEF_N;   // nombre de manches de la partie
+const gW = () => ((duel && duel.S && duel.S.set && duel.S.set.w) || DEF_W) * 1000;   // temps laissé aux autres
 const PCOL = ['#8FE09D', '#A98BFF', '#F5C84C', '#6EC8FF', '#FF8FA3', '#FFB86B', '#7EE0D3', '#E6A6FF', '#C9D86B', '#FF7A6B', '#9AB0FF', '#EDEDE8'];
 const PEER_JS = 'https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js';
 const DSTAGE = { cap: 1, country: 2, place: 3, reveal: 4 };
@@ -2521,6 +2530,7 @@ function dRank(pl) {
 }
 // 10 pays tirés selon la difficulté et la région du chef, sans doublon
 function dPick(set) {
+  const DN = set.n;
   const P = set.r === 'Tous' ? C : C.filter(c => c.r === set.r), w = MODES[set.m].w.slice();
   const cnt = t => P.filter(c => tierOf(c.k) === t).length;
   let have = w.reduce((s, x, t) => s + (x > 0 ? cnt(t) : 0), 0);
@@ -2543,7 +2553,7 @@ function hPlayer(key, n, from) {
   let c = 0; while (used.has(c) && c < PCOL.length - 1) c++;
   const id = rid(6, ABC);
   H.keys[id] = key;
-  return { id, n, c, on: true, t: 0, tm: 0, rs: Array(DN).fill(null), from };
+  return { id, n, c, on: true, t: 0, tm: 0, rs: Array(H.S.set.n).fill(null), from };
 }
 function pub() {
   const S = H.S;
@@ -2640,7 +2650,7 @@ function hAnswer(id, d) {
   g.done.push(id);
   if (hCheck()) return;
   // le premier qui répond : 7 secondes pour les autres
-  if (!g.dl) { g.dl = Date.now() + DWAIT; clearTimeout(H.timer); H.timer = setTimeout(hEndStep, DWAIT); }
+  if (!g.dl) { const w = S.set.w * 1000; g.dl = Date.now() + w; clearTimeout(H.timer); H.timer = setTimeout(hEndStep, w); }
   hBcast();
 }
 // tous ceux qui sont encore là ont répondu : on n'attend pas la fin des 7 s
@@ -2682,13 +2692,13 @@ function hReveal() {
   }
   g.dl = Date.now() + DREVEAL;
   hBcast();
-  H.timer = setTimeout(() => { if (!H || H.S.g !== g) return; if (g.i + 1 < DN) hRound(g.i + 1); else hPodium(); }, DREVEAL);
+  H.timer = setTimeout(() => { if (!H || H.S.g !== g) return; if (g.i + 1 < S.set.n) hRound(g.i + 1); else hPodium(); }, DREVEAL);
 }
 function hStart() {
   const S = H.S; if (S.ph !== 'lobby') return;
   if (S.pl.filter(p => p.on).length < 2) return;
   S.pl = S.pl.filter(p => p.on);
-  S.pl.forEach(p => { p.t = 0; p.tm = 0; p.rs = Array(DN).fill(null); p.from = 0; });
+  S.pl.forEach(p => { p.t = 0; p.tm = 0; p.rs = Array(S.set.n).fill(null); p.from = 0; });
   H.ks = dPick(S.set); S.ph = 'game'; S.g = null; S.pod = null;
   hRound(0);
 }
@@ -2701,7 +2711,7 @@ function hPodium() {
   H.timer = setTimeout(hBoard, podDur(S.pod.length));
 }
 function hBoard() { if (!H) return; clearTimeout(H.timer); H.S.ph = 'board'; hBcast(); }
-function hLobby() { if (!H) return; clearTimeout(H.timer); const S = H.S; S.ph = 'lobby'; S.g = null; S.pod = null; S.pl = S.pl.filter(p => p.on); S.pl.forEach(p => { p.t = 0; p.tm = 0; p.rs = Array(DN).fill(null); p.from = 0; }); hBcast(); }
+function hLobby() { if (!H) return; clearTimeout(H.timer); const S = H.S; S.ph = 'lobby'; S.g = null; S.pod = null; S.pl = S.pl.filter(p => p.on); S.pl.forEach(p => { p.t = 0; p.tm = 0; p.rs = Array(S.set.n).fill(null); p.from = 0; }); hBcast(); }
 
 /* ---------- pouls : un joueur ou un chef silencieux depuis 15 s est considéré parti ---------- */
 let dBeat = 0;
@@ -2739,7 +2749,7 @@ async function dCreate() {
   const code = rid(5, 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789');
   const peer = new Peer('cdm-' + code, peerOpts());
   duel = { role: 'host', code, me: null, name, peer, S: null, off: 0, conns: new Map(), srs: {} };
-  H = { S: { code, chef: null, ph: 'lobby', set: { m: mode, r: region }, pl: [], g: null, pod: null }, ks: [], ans: {}, timer: 0, keys: {}, ban: new Set(), chefKey: dKey };
+  H = { S: { code, chef: null, ph: 'lobby', set: { m: mode, r: region, n: ls.get('dRounds', DEF_N), w: ls.get('dWait', DEF_W) }, pl: [], g: null, pod: null }, ks: [], ans: {}, timer: 0, keys: {}, ban: new Set(), chefKey: dKey };
   const me = hPlayer(dKey, name, 0); H.S.pl.push(me); H.S.chef = me.id; duel.me = me.id;
   podLoad();
   peer.on('open', () => { if (duel && duel.peer === peer) { hBcast(); dHeartbeat(); } });
@@ -2909,6 +2919,8 @@ $('#dStart').onclick = () => { if (H) hStart(); };
 $('#dToLobby').onclick = () => { if (H) hLobby(); };
 $('#dSkip').onclick = () => { if (H && H.S.ph === 'podium') hBoard(); };
 $('#dModes').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (!b || !H || H.S.ph !== 'lobby') return; H.S.set.m = +b.dataset.m; hBcast(); });
+$('#dRounds').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (!b || !H || H.S.ph !== 'lobby') return; H.S.set.n = +b.dataset.v; ls.set('dRounds', H.S.set.n); H.S.pl.forEach(p => { p.rs = Array(H.S.set.n).fill(null); }); hBcast(); });
+$('#dWaitSel').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (!b || !H || H.S.ph !== 'lobby') return; H.S.set.w = +b.dataset.v; ls.set('dWait', H.S.set.w); hBcast(); });
 $('#dRegs').addEventListener('click', e => { const b = e.target.closest('[data-r]'); if (!b || !H || H.S.ph !== 'lobby') return; H.S.set.r = b.dataset.r; hBcast(); });
 $('#dPlayers').addEventListener('click', e => { const b = e.target.closest('[data-kick]'); if (b && H) hKick(b.dataset.kick); });
 
@@ -2933,12 +2945,15 @@ function dLobbyRender() {
   for (let i = S.pl.length; i < slots; i++) html += '<li class="empty"><i>+</i>libre</li>';
   $('#dPlayers').innerHTML = html;
   dSeenIds = new Set(S.pl.map(p => p.id));
-  $('#dModes').innerHTML = levelsHtml(S.set.m, !chef);
+  const segOf = (opts, cur, unit) => opts.map(v => `<button type="button" role="radio" data-v="${v}" aria-checked="${v === cur}"${chef ? '' : ' disabled'}>${v}${unit}</button>`).join('');
+  $('#dRounds').innerHTML = segOf(ROUND_OPTS, S.set.n, '');
+  $('#dWaitSel').innerHTML = segOf(WAIT_OPTS, S.set.w, ' s');
+  $('#dModes').innerHTML = segHtml(S.set.m, !chef);
   $('#dRegs').innerHTML = REGIONS.map(r => `<button type="button" class="chip" data-r="${r}" aria-pressed="${r === S.set.r}"${chef ? '' : ' disabled'}>${r}</button>`).join('');
   $('#dModeDesc').textContent = MODES[S.set.m].d;
   $('#dStart').hidden = !chef;
   $('#dStart').disabled = on < 2;
-  $('#dStartHint').textContent = chef ? (on < 2 ? 'Envoie le lien : il faut au moins 2 joueurs.' : `${DN} manches · ${MODES[S.set.m].n} · ${S.set.r}`) : 'Le chef lance la partie quand tout le monde est là.';
+  $('#dStartHint').textContent = chef ? (on < 2 ? 'Envoie le lien : il faut au moins 2 joueurs.' : `${S.set.n} manches · ${S.set.w} s par question · ${MODES[S.set.m].n} · ${S.set.r}`) : 'Le chef lance la partie quand tout le monde est là.';
   // ouvert depuis un fichier sur le PC : le lien ne marchera pas chez les autres
   let w = $('#dWarn');
   if (location.protocol === 'file:') {
@@ -2963,7 +2978,7 @@ function dHud() {
   document.body.classList.toggle('duel-on', inGame); document.body.classList.add('duel-any');
   if (inGame) {
     const g = S.g, L = dRank(S.pl);
-    $('#dHud').innerHTML = `<div class="dh-h">Manche ${g.i + 1}/${DN}</div>` + L.map(p => {
+    $('#dHud').innerHTML = `<div class="dh-h">Manche ${g.i + 1}/${gN()}</div>` + L.map(p => {
       const st = !p.on ? '<span class="dh-s off">parti</span>' : g.st !== 'reveal' && g.el.includes(p.id) ? (g.done.includes(p.id) ? '<span class="dh-s ok">✓</span>' : '<span class="dh-s wait">…</span>') : '<span class="dh-s"></span>';
       return `<div class="dh-r${p.id === duel.me ? ' me' : ''}${p.on ? '' : ' off'}"><i style="background:${PCOL[p.c]}"></i><span class="dh-n">${esc(p.n)}</span>${st}<b>${p.t}</b></div>`;
     }).join('');
@@ -2973,7 +2988,7 @@ function dHud() {
 function dScoreTab() {
   const S = duel.S, me = dMe();
   $('#sPts').textContent = me ? me.t : 0; $('#sUnit').textContent = 'pts';
-  $('#sSub').textContent = S.ph === 'game' && S.g ? `duel · manche ${S.g.i + 1}/${DN}` : 'duel';
+  $('#sSub').textContent = S.ph === 'game' && S.g ? `duel · manche ${S.g.i + 1}/${gN()}` : 'duel';
   const qb = $('#quitBtn'); qb.hidden = !(S.ph === 'game' || S.ph === 'podium'); if (!quitArmed) qb.textContent = 'Quitter';
 }
 
@@ -2996,7 +3011,7 @@ function dOnState() {
     if (!g.part.includes(duel.me)) {   // arrivé en cours : on regarde jusqu'à la manche suivante
       dStopRound();
       phase = 'duel'; sceneMode = 'list'; tween(cam, { dim: 1 }, 450, E.sortie);
-      $('#dWaitP').textContent = `Manche ${g.i + 1} sur ${DN} en cours. Tu joues dès la prochaine manche.`;
+      $('#dWaitP').textContent = `Manche ${g.i + 1} sur ${gN()} en cours. Tu joues dès la prochaine manche.`;
       dShow('wait'); if (!duelUI.classList.contains('on')) fadeIn(duelUI, 40);
       $('#dWaitList').innerHTML = dPlayersHtml(S, true);
       return;
@@ -3067,7 +3082,7 @@ async function dRoundStart(g) {
   resetMap();
   $('#hFlag').src = flagUrl(c.k); $('#hName').textContent = c.n;
   instr.classList.add('off'); instr.innerHTML = ''; vbtn.hidden = true;
-  $('#cbStep').textContent = `Duel · manche ${g.i + 1} sur ${DN}`;
+  $('#cbStep').textContent = `Duel · manche ${g.i + 1} sur ${gN()}`;
   capIn.value = ''; capIn.disabled = false;
   $('#verdict').hidden = true; $('#cbField').hidden = false; $('#cbRow').hidden = false; $('#cbAsk').hidden = false; $('#cbNext').hidden = true;
   capBox.classList.remove('out', 'on', 'is-ok', 'is-ko', 'is-skip', 'is-sent', 'solo');
@@ -3175,11 +3190,11 @@ function dRevealCard(r) {
   const mark = ok => ok ? '<b class="ok">✓</b>' : '<b class="ko">✗</b>';
   resultEl.innerHTML = `
     <div class="r-card plaque d-rev">
-      <div class="dr-h"><img src="${flagUrl(c.k)}" alt=""><div><b>${esc(c.n)}</b><span>${esc(capLabel(c))}</span></div><em>Manche ${g.i + 1}/${DN}</em></div>
+      <div class="dr-h"><img src="${flagUrl(c.k)}" alt=""><div><b>${esc(c.n)}</b><span>${esc(capLabel(c))}</span></div><em>Manche ${g.i + 1}/${gN()}</em></div>
       <div class="dr-cols"><span></span><span>Cap.</span><span>Pays</span><span>Lieu</span><span>+</span><span>Temps</span><span>Total</span></div>
       <ul class="dr-list">${L.map(p => { const x = res[p.id];
         return `<li class="${p.id === duel.me ? 'me' : ''}"><span class="pn"><i style="background:${PCOL[p.c]}"></i>${esc(p.n)}</span>${x ? mark(x.capOk) + mark(x.ctyOk) + (x.ctyOk ? mark(x.placeOk) : '<b class="na">–</b>') + `<b class="dr-s s${x.s}">+${x.s}</b><span class="d-time">${fmtTime(x.time)}</span>` : '<b class="na">–</b><b class="na">–</b><b class="na">–</b><b class="dr-s na">·</b><span class="d-time">–</span>'}<b class="dr-t">${p.t}</b></li>`; }).join('')}</ul>
-      <div class="dr-next">${g.i + 1 < DN ? 'Manche suivante' : 'Le podium'} dans <b id="drSec">${Math.max(0, Math.ceil((g.dl - dNow()) / 1000))}</b> s</div>
+      <div class="dr-next">${g.i + 1 < gN() ? 'Manche suivante' : 'Le podium'} dans <b id="drSec">${Math.max(0, Math.ceil((g.dl - dNow()) / 1000))}</b> s</div>
     </div>`;
   fadeIn(resultEl);
   dTimer();
@@ -3191,7 +3206,7 @@ function dLostShow(on) {
 // texte sous le nom du pays, selon où on en est
 function dInstr() {
   const r = round; if (!r) return;
-  const st = r.step, lab = `<span class="st">Manche ${r.i + 1}/${DN}</span>`;
+  const st = r.step, lab = `<span class="st">Manche ${r.i + 1}/${gN()}</span>`;
   const chip = r.stage > 1 ? chipHtml() : '';
   let t = '';
   if (st === 'country') t = `<span>Trouve <b>${esc(r.c.n)}</b> sur la carte, puis valide.</span>`;
@@ -3227,7 +3242,7 @@ function dTimer() {
     el.classList.toggle('hot', mine);
     if (mine) el.innerHTML = `<b>${left}</b><span>s pour répondre</span>`;
     else el.innerHTML = left !== null ? `<b>${left}</b><span>s · résultat à la fin du temps</span>` : `<span>Réponse envoyée · on attend ${waiting} joueur${waiting > 1 ? 's' : ''}…</span>`;
-    el.style.setProperty('--p', (g.dl ? clamp01((g.dl - dNow()) / DWAIT) : 1).toFixed(3));
+    el.style.setProperty('--p', (g.dl ? clamp01((g.dl - dNow()) / gW()) : 1).toFixed(3));
   };
   upd();
   dTick = setInterval(upd, 200);

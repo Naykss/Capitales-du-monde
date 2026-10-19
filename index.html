@@ -2477,11 +2477,11 @@ function renderInstr() {
   if (round && round.duel) { dInstr(); return; }
   const r = round, st = r.step, S = r.steps;
   const lab = n => `<span class="st">${r.tr ? 'Entraînement' : 'Étape ' + n + '/3'}</span>` + (S.has('cap') ? chipHtml() : '');
-  if (st === 'country') instr.innerHTML = lab(2) + `<span>Trouve <b>${esc(r.c.n)}</b> sur la carte, puis valide.</span>`;
+  if (st === 'country') instr.innerHTML = lab(2) + `<span>Clique sur <b>${esc(r.c.n)}</b> sur la carte.</span>`;
   else if (st === 'place') instr.innerHTML = lab(3) + `<span>Place <b>${esc(capLabel(r.c))}</b> à <b>${r.tol} km</b> près, puis valide.</span>`;
   instr.classList.toggle('off', !(st === 'country' || st === 'place'));
-  vbtn.hidden = !((st === 'country' || st === 'place') && r.pending);
-  vbtn.textContent = st === 'country' ? 'Valider le pays ✓' : 'Valider la capitale ✓';
+  vbtn.hidden = !(st === 'place' && r.pending);
+  vbtn.textContent = 'Valider la capitale ✓';
   mapLayer.classList.toggle('mode-country', st === 'country');
   mapLayer.classList.toggle('mode-place', st === 'place');
 }
@@ -2508,15 +2508,16 @@ svg.on('click', e => {
   if (!r || (r.step !== 'country' && r.step !== 'place')) return;
   const m = mapPoint(e); if (!m) return;
   const p = m.p;
-  let ck = null;
   if (r.step === 'country') {
-    // le pays cliqué s'éclaire, on confirme avec « Valider le pays »
-    ck = countryAt(p);
+    // le pays cliqué est validé tout de suite (seule la capitale se confirme avec un bouton)
+    const ck = countryAt(p);
     if (!ck && !nearLand(p)) { seaHint(); return; }
     clearTimeout(seaT); instr.classList.remove('nudge');
+    r.pending = { p, pt: m.pt, k: curT.k, ck };
+    validate();
+    return;
   }
-  r.pending = { p, pt: m.pt, k: curT.k, ck };
-  setSt({ sel: r.step === 'country' ? ck : null });
+  r.pending = { p, pt: m.pt, k: curT.k, ck: null };
   setMarkers([{ type: 'pin', cls: 'mk-pin', p }]);
   renderInstr();
 });
@@ -3828,7 +3829,7 @@ function dInstr() {
   const st = r.step, lab = `<span class="st">Manche ${r.i + 1}/${gN()}</span>`;
   const chip = r.stage > 1 ? chipHtml() : '';
   let t = '';
-  if (st === 'country') t = `<span>Trouve <b>${esc(r.c.n)}</b> sur la carte, puis valide.</span>`;
+  if (st === 'country') t = `<span>Clique sur <b>${esc(r.c.n)}</b> sur la carte.</span>`;
   else if (st === 'country-wait' || st === 'place-wait') t = '<span>Réponse envoyée · le résultat tombe à la fin du temps.</span>';
   else if (st === 'country-ok') t = '<span class="good">Bon pays !</span>';
   else if (st === 'country-ko') t = '<span class="bad">Mauvais pays, c\'était ici.</span>';
@@ -3836,8 +3837,8 @@ function dInstr() {
   else if (st === 'skip') t = '<span class="bad">Mauvais pays : tu passes l\'étape 3.</span>';
   instr.innerHTML = lab + chip + t;
   instr.classList.toggle('off', !t);
-  vbtn.hidden = !((st === 'country' || st === 'place') && r.pending);
-  vbtn.textContent = st === 'country' ? 'Valider le pays ✓' : 'Valider la capitale ✓';
+  vbtn.hidden = !(st === 'place' && r.pending);
+  vbtn.textContent = 'Valider la capitale ✓';
   mapLayer.classList.toggle('mode-country', st === 'country');
   mapLayer.classList.toggle('mode-place', st === 'place');
 }

@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style></head><body><title>Capitales du monde</title>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style><script src="sons.js"></script></head><body><title>Capitales du monde</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="icon" id="fav" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -84,6 +84,12 @@ img,svg{display:block}
 .tile.latest{box-shadow:0 0 0 2px rgba(0,0,0,.5),0 0 0 3.5px var(--encre)}
 .tile:not(.empty):hover,.tile:not(.empty):focus-visible{filter:brightness(1.14)}
 .score-tab{right:0;padding:10px max(16px,var(--droite)) 13px 34px;border-bottom-left-radius:44px;text-align:right;display:flex;align-items:center;gap:14px}
+.sndbtn{flex:none;width:34px;height:34px;border-radius:50%;border:0;padding:0;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px var(--trait);display:grid;place-items:center;color:var(--encre-douce);cursor:pointer;transition:color .2s,background .2s}
+.sndbtn:hover{color:var(--encre);background:rgba(255,255,255,.1)}
+.sndbtn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.sndbtn .spk,.sndbtn .nh{fill:currentColor;stroke:none}
+.sndbtn[data-m="2"] .w2,.sndbtn[data-m="2"] .x,.sndbtn[data-m="1"] .note,.sndbtn[data-m="1"] .x,.sndbtn[data-m="0"] .w1,.sndbtn[data-m="0"] .w2,.sndbtn[data-m="0"] .note{display:none}
+.sndbtn[data-m="0"]{color:var(--gris)}
 .score b{font-size:30px;font-weight:600;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
 .score span{color:var(--encre-douce);font-size:13px;margin-left:4px}
 .ssub{color:var(--gris);font-size:12px;font-variant-numeric:tabular-nums;margin-top:3px}
@@ -111,8 +117,11 @@ img,svg{display:block}
 .brand{font-weight:600;font-size:clamp(3rem,1.2rem + 5.2vw,6.2rem);line-height:.9;letter-spacing:-.055em;text-wrap:balance}
 .brand i{font-style:normal;color:var(--vert)}
 .lede{color:var(--encre-douce);font-size:1.0625rem;max-width:40ch;text-wrap:pretty}
-.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px;max-width:470px}
-.actions .btn{width:100%}
+.actions{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px 12px;max-width:560px}
+.actions .btn{width:100%;grid-column:span 2;padding-left:.6rem;padding-right:.6rem}
+.actions #play,.actions #openDuel{grid-column:span 3}
+.btn-snd{gap:.45rem}
+.btn-snd svg{width:1.05em;height:1.05em;flex:none;fill:currentColor}
 .regions{display:flex;flex-wrap:wrap;gap:6px}
 .chip{border:1px solid var(--trait);background:rgba(255,255,255,.03);border-radius:999px;padding:5px 12px;font-size:13px;color:var(--encre-douce);font-weight:500}
 .chip[aria-pressed="true"]{border-color:var(--vert);color:var(--encre);background:rgba(143,224,157,.12)}
@@ -154,6 +163,31 @@ img,svg{display:block}
 body.training .hist-tab{opacity:.4;transition:opacity .3s}
 /* bandeau ou choix d'entraînement ouverts : on retire le texte d'intro pour garder la colonne à sa hauteur */
 #menu.train-open .lede,#menu.has-ab .lede{display:none}
+#menu.snd-open .lede,#menu.snd-open .modes-wrap,#menu.snd-open .regions,#menu.snd-open .legend{display:none}
+/* musique et sons : le choix (au menu) et les volumes (partout) */
+.sp-l{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--encre-douce);margin-top:4px}
+.sp-l span{text-transform:none;letter-spacing:0;font-weight:400;color:var(--gris);margin-left:6px}
+.sp-trk[aria-pressed="true"]{box-shadow:0 0 0 2px var(--vert),0 .22em 0 var(--tranche),0 1px 0 var(--eclat) inset}
+.sp-trk[aria-pressed="true"] b::after{content:" ✓";color:var(--vert)}
+.sp-none{grid-column:1/-1;display:flex;align-items:baseline;gap:10px;padding-top:9px;padding-bottom:10px}
+.sp-styles{display:flex;flex-wrap:wrap;gap:6px}
+.sp-styles .chip{font-size:14px;padding:6px 13px}
+.sp-vols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px;margin-top:2px}
+.sp-v{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:10px;font-size:13.5px;color:var(--encre-douce)}
+.sp-v span{min-width:3.6em}
+.sp-v input{-webkit-appearance:none;appearance:none;width:100%;height:24px;margin:0;background:transparent;cursor:pointer}
+.sp-v input::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(90deg,var(--vert) var(--p,50%),rgba(255,255,255,.13) var(--p,50%))}
+.sp-v input::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;margin-top:-6px;border-radius:50%;background:var(--encre);box-shadow:0 1px 4px rgba(0,0,0,.5)}
+.sp-v input::-moz-range-track{height:6px;border-radius:3px;background:rgba(255,255,255,.13)}
+.sp-v input::-moz-range-progress{height:6px;border-radius:3px;background:var(--vert)}
+.sp-v input::-moz-range-thumb{width:18px;height:18px;border:0;border-radius:50%;background:var(--encre)}
+.sndbtn[aria-expanded="true"]{color:var(--encre);background:rgba(255,255,255,.14)}
+.sndpop{position:fixed;z-index:40;top:calc(var(--top) + 68px);right:max(16px,var(--droite));width:min(290px,calc(100vw - 32px));display:grid;gap:12px;padding:16px 16px 12px;
+  border-radius:20px;background:var(--plaque);box-shadow:0 0 0 1px var(--plaque-bord),var(--ombre)}
+.sndpop .sp-v{grid-template-columns:4.2em 1fr}
+.sp-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.sp-row .btn-lien{min-height:2.1rem;padding:.3rem .2rem;font-size:.875rem}
+.sp-only{font-size:12.5px;color:var(--gris);line-height:1.4}
 #capBox.solo .steps3{display:none}
 .cb-next{margin-top:2px}
 /* abandon : bandeau dans le menu */
@@ -576,7 +610,9 @@ body.pod-on .tab,body.pod-on .topline{opacity:0;pointer-events:none}
   .seg button{padding:6px 11px;font-size:13px}
   .d-opt{grid-template-columns:1fr;gap:6px} .d-ol{padding-top:0}
   .actions{gap:10px}
-  .actions .btn-grand{min-height:3rem;padding:.7rem .5rem;font-size:.95rem;white-space:nowrap}
+  .actions .btn-grand{min-height:3rem;padding:.55rem .4rem;font-size:.95rem;white-space:nowrap}
+  .actions .btn-trait.btn-grand{white-space:normal;line-height:1.15;font-size:.9rem}
+  .btn-snd{gap:.3rem}
   .t-opt{padding:10px 12px 11px} .t-opt b{font-size:14.5px} .t-opt span{font-size:12px}
   .abnote{padding:10px 12px;gap:10px} .abnote img{width:38px;height:28px} .ab-t p{font-size:12px}
   .grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px 12px}
@@ -608,8 +644,15 @@ body.pod-on .tab,body.pod-on .topline{opacity:0;pointer-events:none}
 <div class="topline" aria-hidden="true"></div>
 <div class="tab hist-tab" id="histTab"><div class="hist" id="hist" aria-label="10 derniers pays"></div><div class="dhud" id="dHud" aria-label="Scores du duel"></div></div>
 <div class="tab score-tab">
+  <button class="sndbtn" id="sndBtn" type="button" aria-label="Son" data-m="2" aria-expanded="false" aria-controls="sndPop"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M3.5 9.2h3.3L11.5 5v14l-4.7-4.2H3.5z"/><path class="w1" d="M14.6 9a4.2 4.2 0 0 1 0 6"/><path class="w2" d="M17.2 6.4a8 8 0 0 1 0 11.2"/><path class="note" d="M19 13.6V5.2l2.6 1.1"/><circle class="note nh" cx="17.6" cy="13.8" r="1.7"/><path class="x" d="M15.3 9.6l5 5M20.3 9.6l-5 5"/></svg></button>
   <div class="score-txt"><div class="score"><b id="sPts">0</b><span id="sUnit">pts</span></div><div class="ssub" id="sSub">aucune partie</div></div>
   <button class="btn btn-trait btn-petit" id="quitBtn" type="button" hidden>Menu</button>
+</div>
+<div class="sndpop" id="sndPop" hidden role="dialog" aria-label="Volume">
+  <label class="sp-v"><span>Musique</span><input type="range" min="0" max="1" step="0.01" data-vol="vm" id="volM2"></label>
+  <label class="sp-v"><span>Effets</span><input type="range" min="0" max="1" step="0.01" data-vol="vf" id="volF2"></label>
+  <div class="sp-row"><button type="button" class="btn btn-trait btn-petit" id="spMute">Couper le son</button><button type="button" class="btn btn-lien" id="spGo">Changer de musique</button></div>
+  <p class="sp-only" id="spOnlyMenu" hidden>La musique et le style des sons se choisissent au menu.</p>
 </div>
 
 <section id="menu" class="fade" aria-label="Menu">
@@ -627,6 +670,19 @@ body.pod-on .tab,body.pod-on .topline{opacity:0;pointer-events:none}
       <button class="btn btn-verre btn-duel btn-grand" id="openDuel" type="button">Duel</button>
       <button class="btn btn-trait btn-grand" id="openTrain" type="button" aria-expanded="false" aria-controls="trainPick">Entraînement</button>
       <button class="btn btn-trait btn-grand" id="openList" type="button">Liste pays + stats</button>
+      <button class="btn btn-trait btn-grand btn-snd" id="openSnd" type="button" aria-expanded="false" aria-controls="sndPick"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="5.2" width="1.8" height="12.4"/><rect x="18.2" y="3" width="1.8" height="12.4"/><path d="M8 5.4 20 3v3.3L8 8.7z"/><circle cx="6.4" cy="17.6" r="2.8"/><circle cx="16.6" cy="15.4" r="2.8"/></svg>Musique</button>
+    </div>
+    <div class="train sndpick" id="sndPick" hidden>
+      <div class="train-h"><b>Musique et sons</b><span id="spNow"></span><button class="x" type="button" id="sndClose" aria-label="Fermer le choix de la musique">×</button></div>
+      <p class="sp-l">Musique</p>
+      <div class="train-opts" id="spTracks"></div>
+      <p class="sp-l">Bruitages<span>du plus grave au plus aigu</span></p>
+      <div class="sp-styles" id="spStyles"></div>
+      <div class="sp-vols">
+        <label class="sp-v"><span>Musique</span><input type="range" min="0" max="1" step="0.01" data-vol="vm" id="volM1"></label>
+        <label class="sp-v"><span>Effets</span><input type="range" min="0" max="1" step="0.01" data-vol="vf" id="volF1"></label>
+      </div>
+      <p class="sp-only">Instruments : piano Salamander et FluidR3 (CC BY 3.0) · bruitages : UI SFX (CC0)</p>
     </div>
     <div class="train" id="trainPick" hidden>
       <div class="train-h"><b>Entraînement</b><span>rien n'est compté dans les stats</span><button class="x" type="button" id="trainClose" aria-label="Fermer l'entraînement">×</button></div>
@@ -881,6 +937,233 @@ const ls = {
   raw(k) { try { return localStorage.getItem('capmonde.' + k); } catch (e) { return null; } },
   setRaw(k, v) { try { localStorage.setItem('capmonde.' + k, v); } catch (e) {} }
 };
+
+/* ================= SON : 4 musiques (vrais instruments, en boucle) et 10 styles de bruitages =================
+   Les fichiers (site/snd) se chargent à la demande : seulement la musique et le style choisis.
+   Au menu, le bouton « Musique » ouvre le choix (musique, style de bruitages, volumes) ; en jeu, le bouton
+   haut-parleur (en haut à droite) ne règle que les volumes. Par défaut : Lo-fi café + Cinéma.
+   Rien ne joue avant le premier clic (les navigateurs l'interdisent) ; tout se coupe quand l'onglet est caché. */
+const SND_TRACKS = [
+  { id: 'lofi', name: 'Lo-fi café', sub: 'Piano électrique, contrebasse, batterie feutrée', url: 'snd/m-lofi.mp3', n: 2288432 },
+  { id: 'voyage', name: 'Grand voyage', sub: 'Piano à queue, cordes, violoncelle, cor', url: 'snd/m-voyage.mp3', n: 2565818 },
+  { id: 'monde', name: 'Tour du monde', sub: 'Guitare classique, marimba, bongos', url: 'snd/m-monde.mp3', n: 1801531 },
+  { id: 'nuit', name: 'Nuit étoilée', sub: 'Synthés doux, basse qui pulse', url: 'snd/m-nuit.mp3', n: 2016000 }
+];
+// du plus grave au plus aigu
+const SND_STYLES = [
+  { id: 'cinematic', name: 'Cinéma', url: 'snd/fx-cinematic.json' }, { id: 'mechanical', name: 'Mécanique', url: 'snd/fx-mechanical.json' },
+  { id: 'rubber', name: 'Rebond', url: 'snd/fx-rubber.json' }, { id: 'soft', name: 'Feutré', url: 'snd/fx-soft.json' },
+  { id: 'studio', name: 'Studio', url: 'snd/fx-studio.json' }, { id: 'zen', name: 'Zen', url: 'snd/fx-zen.json' },
+  { id: 'organic', name: 'Nature', url: 'snd/fx-organic.json' }, { id: 'minimal', name: 'Minimal', url: 'snd/fx-minimal.json' },
+  { id: 'dreamy', name: 'Rêveur', url: 'snd/fx-dreamy.json' }, { id: 'arcade', name: 'Arcade', url: 'snd/fx-arcade.json' }
+];
+const SND_MP3_PAD = 1105 / 44100;   // silence de tête d'un mp3, si le navigateur ne l'enlève pas lui-même
+const SND_EVG = { tap: .8, tick: .85, hot: .9, pop: .5, appr: .7, warp: .8 };   // volume propre à certains moments
+const SND = {
+  ctx: null, master: null, fx: null, mus: null, tapAt: 0, popAt: 0, musLvl: 1,
+  mute: !!ls.get('sndMute', ls.get('snd', 2) === 0),
+  vm: +ls.get('sndVm', .7), vf: +ls.get('sndVf', .8),
+  track: ls.get('sndTrack', 'lofi'), style: ls.get('sndStyle', 'cinematic'),
+  bytes: {}, mbuf: {}, cur: null, fxBuf: {}, fxStyle: null, fxReady: null
+};
+if (!(SND.vm >= 0 && SND.vm <= 1)) SND.vm = .7;
+if (!(SND.vf >= 0 && SND.vf <= 1)) SND.vf = .8;
+if (SND.track !== 'none' && !SND_TRACKS.some(t => t.id === SND.track)) SND.track = 'lofi';
+if (!SND_STYLES.some(s => s.id === SND.style)) SND.style = 'cinematic';
+const sndTrack = id => SND_TRACKS.find(t => t.id === id);
+const sndStyle = id => SND_STYLES.find(s => s.id === id);
+
+// téléchargement (gardé en mémoire) : avant le premier clic on ne fait que récupérer les octets
+function sndGet(url, json) {
+  const k = (json ? 'j:' : 'b:') + url;
+  const src = (window.CDM_SND && window.CDM_SND[url]) || url;   // version à télécharger : les sons sont dans sons.js
+  if (!SND.bytes[k]) SND.bytes[k] = fetch(src).then(r => { if (!r.ok) throw new Error(r.status); return json ? r.json() : r.arrayBuffer(); })
+    .catch(e => { delete SND.bytes[k]; throw e; });
+  return SND.bytes[k];
+}
+function sndDecode(ab) { return new Promise((ok, ko) => { try { const p = SND.ctx.decodeAudioData(ab, ok, ko); if (p && p.catch) p.catch(ko); } catch (e) { ko(e); } }); }
+function b64ab(s) { const b = atob(s), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u.buffer; }
+function sndPrefetch() {
+  if (SND.mute) return;
+  sndGet(sndStyle(SND.style).url, true).catch(() => {});
+  if (SND.track !== 'none') sndGet(sndTrack(SND.track).url).catch(() => {});
+}
+setTimeout(sndPrefetch, 2500);
+
+function sndInit() {
+  if (SND.mute) return;
+  if (SND.ctx) { if (SND.ctx.state === 'suspended' && !document.hidden) SND.ctx.resume().catch(() => {}); return; }
+  const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+  let ctx; try { ctx = new AC(); } catch (e) { return; }
+  sndGraph(ctx);
+  sndApply(true);
+  sndFxLoad(SND.style);
+  musPlay();
+}
+// le circuit : limiteur doux → sortie ; effets et musique ont chacun leur volume
+function sndGraph(ctx) {
+  SND.ctx = ctx; SND.cur = null; SND.mbuf = {}; SND.fxBuf = {}; SND.fxStyle = null;
+  const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -6; comp.knee.value = 4; comp.ratio.value = 12; comp.attack.value = .003; comp.release.value = .2;
+  comp.connect(ctx.destination);
+  SND.master = ctx.createGain(); SND.master.connect(comp);
+  SND.fx = ctx.createGain(); SND.fx.connect(SND.master);
+  SND.mus = ctx.createGain(); SND.mus.connect(SND.master);
+}
+function sndApply(now) {
+  if (!SND.ctx) return;
+  const t = SND.ctx.currentTime, k = now ? .01 : .12;
+  SND.fx.gain.setTargetAtTime(SND.mute ? 0 : 1.6 * SND.vf * SND.vf, t, k);
+  SND.mus.gain.setTargetAtTime(SND.mute ? 0 : SND.vm * SND.vm * SND.musLvl, t, now ? .01 : .5);
+  if (SND.mute) setTimeout(() => { if (SND.mute && SND.ctx) SND.ctx.suspend().catch(() => {}); }, 500);
+  else if (SND.ctx.state === 'suspended' && !document.hidden) SND.ctx.resume().catch(() => {});
+}
+// la musique se fait plus discrète en jeu, presque muette au podium
+function sndMusic(lvl) { SND.musLvl = lvl; if (SND.ctx && !SND.mute) SND.mus.gain.setTargetAtTime(SND.vm * SND.vm * lvl, SND.ctx.currentTime, .8); }
+['pointerdown', 'keydown', 'touchstart'].forEach(ev => window.addEventListener(ev, sndInit, { capture: true, passive: true }));
+document.addEventListener('visibilitychange', () => {
+  if (!SND.ctx) return;
+  if (document.hidden) SND.ctx.suspend().catch(() => {}); else if (!SND.mute) SND.ctx.resume().catch(() => {});
+});
+
+/* ---------- musique : une boucle exacte, fondu enchaîné quand on change ---------- */
+function musLoad(tk) {
+  if (!SND.mbuf[tk.id]) SND.mbuf[tk.id] = sndGet(tk.url).then(ab => sndDecode(ab.slice(0))).catch(e => { delete SND.mbuf[tk.id]; throw e; });
+  return SND.mbuf[tk.id];
+}
+function musStop(fade = .8) {
+  const c = SND.cur; if (!c || !SND.ctx) return; SND.cur = null;
+  const t = SND.ctx.currentTime;
+  try { c.g.gain.cancelScheduledValues(t); c.g.gain.setValueAtTime(c.g.gain.value, t); c.g.gain.linearRampToValueAtTime(0, t + fade); c.s.stop(t + fade + .05); } catch (e) {}
+}
+function musPlay() {
+  if (!SND.ctx || SND.mute || SND.track === 'none') { musStop(); return; }
+  if (SND.cur && SND.cur.id === SND.track) return;
+  const tk = sndTrack(SND.track), id = tk.id;
+  musLoad(tk).then(b => {
+    if (!SND.ctx || SND.mute || SND.track !== id || (SND.cur && SND.cur.id === id)) return;
+    musStop();
+    const c = SND.ctx, s = c.createBufferSource(), g = c.createGain(), sec = tk.n / 44100;
+    const off = b.duration - sec > .015 ? SND_MP3_PAD : 0;
+    s.buffer = b; s.loop = true; s.loopStart = off; s.loopEnd = Math.min(b.duration, off + sec);
+    const t = c.currentTime + .05;
+    g.gain.value = 0; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(1, t + 1.2);
+    s.connect(g); g.connect(SND.mus); s.start(t, off);
+    SND.cur = { id, s, g };
+  }).catch(() => {});
+}
+
+/* ---------- bruitages ---------- */
+function sndFxLoad(style) {
+  if (SND.fxStyle === style && SND.fxReady) return SND.fxReady;
+  SND.fxStyle = style;
+  const st = sndStyle(style);
+  SND.fxReady = sndGet(st.url, true).then(async j => {
+    if (!SND.ctx) return {};
+    const out = {};
+    await Promise.all(Object.keys(j).map(k => sndDecode(b64ab(j[k])).then(b => { out[k] = b; }, () => {})));
+    if (SND.fxStyle === style) SND.fxBuf = out;
+    return out;
+  }).catch(() => { if (SND.fxStyle === style) SND.fxReady = null; return {}; });
+  return SND.fxReady;
+}
+// joue un bruitage (dt : décalage en secondes) ; un bruitage précis remplace le simple clic du bouton
+function sfx(name, dt = 0, arg) {
+  if (name !== 'tap') SND.tapAt = performance.now();
+  if (!SND.ctx || SND.mute || SND.ctx.state !== 'running') return;
+  const b = SND.fxBuf[name]; if (!b) return;
+  if (name === 'pop') { const n = performance.now(); if (n - SND.popAt < 380) return; SND.popAt = n; }
+  try {
+    const c = SND.ctx, s = c.createBufferSource(), g = c.createGain();
+    s.buffer = b; g.gain.value = SND_EVG[name] || 1; s.connect(g); g.connect(SND.fx);
+    s.start(c.currentTime + .005 + dt);
+  } catch (e) {}
+}
+// clic sur n'importe quel bouton : un petit clic, sauf si le bouton a déjà son propre son
+document.addEventListener('click', e => {
+  if (!e.target.closest('button, .chip, [role="radio"], a, .t-opt, .card')) return;
+  setTimeout(() => { if (performance.now() - SND.tapAt > 60) sfx('tap'); }, 0);
+}, true);
+
+/* ---------- réglages : enregistrés, puis appliqués ---------- */
+function sndSave() { ls.set('sndMute', SND.mute); ls.set('sndVm', SND.vm); ls.set('sndVf', SND.vf); ls.set('sndTrack', SND.track); ls.set('sndStyle', SND.style); }
+function sndSetMute(m) {
+  SND.mute = m; sndSave();
+  if (!m) { sndInit(); sndApply(); sndFxLoad(SND.style); musPlay(); } else sndApply();
+  sndUI();
+}
+function sndSetTrack(id) {
+  SND.track = id; SND.tapAt = performance.now();
+  if (SND.mute) SND.mute = false;
+  sndSave(); sndInit(); sndApply(); musPlay(); sndUI();
+}
+function sndSetStyle(id) {
+  SND.style = id; SND.tapAt = performance.now();
+  if (SND.mute) SND.mute = false;
+  sndSave(); sndInit(); sndApply();
+  // petit aperçu du style : bonne réponse puis manche parfaite
+  sndFxLoad(id).then(() => { if (SND.style === id) { sfx('good'); sfx('res3', .55); } });
+  sndUI();
+}
+
+/* ---------- interface : le choix au menu, le volume partout ---------- */
+const sndPick = $('#sndPick'), sndOpen = $('#openSnd'), sndPop = $('#sndPop');
+function sndUI() {
+  const b = $('#sndBtn');
+  if (b) {
+    const m = SND.mute || (SND.vm === 0 && SND.vf === 0) ? 0 : SND.vm === 0 || SND.track === 'none' ? 1 : 2;
+    b.dataset.m = m; const lab = m === 0 ? 'Son coupé' : m === 1 ? 'Effets seuls' : 'Musique et effets';
+    b.title = lab + ' : régler le volume'; b.setAttribute('aria-label', lab + ', régler le volume');
+  }
+  for (const sl of document.querySelectorAll('[data-vol]')) { const v = SND[sl.dataset.vol]; if (+sl.value !== v) sl.value = v; sl.style.setProperty('--p', (v * 100) + '%'); }
+  const mb = $('#spMute'); if (mb) { mb.setAttribute('aria-pressed', SND.mute); mb.textContent = SND.mute ? 'Remettre le son' : 'Couper le son'; }
+  for (const el of document.querySelectorAll('[data-trk]')) el.setAttribute('aria-pressed', SND.track === el.dataset.trk);
+  for (const el of document.querySelectorAll('[data-sty]')) el.setAttribute('aria-pressed', SND.style === el.dataset.sty);
+  const now = $('#spNow');
+  if (now) now.textContent = (SND.track === 'none' ? 'Sans musique' : sndTrack(SND.track).name) + ' · sons ' + sndStyle(SND.style).name;
+}
+function sndBuild() {
+  if (!sndPick) return;
+  $('#spTracks').innerHTML = SND_TRACKS.map(t => `<button type="button" class="t-opt sp-trk" data-trk="${t.id}" aria-pressed="false"><b>${t.name}</b><span>${t.sub}</span></button>`).join('')
+    + `<button type="button" class="t-opt sp-trk sp-none" data-trk="none" aria-pressed="false"><b>Sans musique</b><span>Juste les bruitages</span></button>`;
+  $('#spStyles').innerHTML = SND_STYLES.map(s => `<button type="button" class="chip" data-sty="${s.id}" aria-pressed="false">${s.name}</button>`).join('');
+  sndUI();
+}
+function sndPanelOpen() {
+  if (typeof closeTrain === 'function') closeTrain();
+  sndPopClose();
+  sndPick.hidden = false; sndOpen.setAttribute('aria-expanded', 'true'); $('#menu').classList.add('snd-open');
+}
+function sndPanelClose() { if (!sndPick || sndPick.hidden) return; sndPick.hidden = true; sndOpen.setAttribute('aria-expanded', 'false'); $('#menu').classList.remove('snd-open'); }
+function sndPopOpen() {
+  sndPop.hidden = false; $('#sndBtn').setAttribute('aria-expanded', 'true');
+  const inMenu = typeof phase !== 'undefined' && phase === 'menu';
+  $('#spGo').hidden = !inMenu; $('#spOnlyMenu').hidden = inMenu;
+  sndUI();
+}
+function sndPopClose() { if (!sndPop || sndPop.hidden) return; sndPop.hidden = true; $('#sndBtn').setAttribute('aria-expanded', 'false'); }
+if (sndPick) {
+  sndBuild();
+  sndOpen.addEventListener('click', () => { if (sndPick.hidden) { sndPanelOpen(); sndPick.querySelector('[aria-pressed="true"]')?.focus({ preventScroll: true }); } else sndPanelClose(); });
+  $('#sndClose').addEventListener('click', () => { sndPanelClose(); sndOpen.focus({ preventScroll: true }); });
+  sndPick.addEventListener('click', e => {
+    const t = e.target.closest('[data-trk]'); if (t) { sndSetTrack(t.dataset.trk); return; }
+    const s = e.target.closest('[data-sty]'); if (s) sndSetStyle(s.dataset.sty);
+  });
+}
+$('#sndBtn').addEventListener('click', e => { e.stopPropagation(); if (sndPop.hidden) sndPopOpen(); else sndPopClose(); });
+document.addEventListener('pointerdown', e => { if (sndPop && !sndPop.hidden && !e.target.closest('#sndPop, #sndBtn')) sndPopClose(); }, true);
+$('#spMute').addEventListener('click', () => sndSetMute(!SND.mute));
+$('#spGo').addEventListener('click', () => { sndPopClose(); sndPanelOpen(); });
+// les curseurs de volume (le même réglage au menu et en jeu)
+let sndVolT = 0;
+document.addEventListener('input', e => {
+  const sl = e.target.closest('[data-vol]'); if (!sl) return;
+  SND[sl.dataset.vol] = +sl.value;
+  if (SND.mute && +sl.value > 0) { SND.mute = false; sndInit(); sndFxLoad(SND.style); musPlay(); }
+  sndApply(); sndUI();
+  clearTimeout(sndVolT); sndVolT = setTimeout(() => { sndSave(); if (sl.dataset.vol === 'vf') { SND.tapAt = 0; sfx('pin'); } }, 250);
+});
+sndUI();
 
 /* ---------- code scellé (export / import / sauvegarde) : chiffré et signé contre la triche ---------- */
 const SECRET = 'CdM·capitales·9f3a71c2-b1e0-4b6c-8a21-7d5e0c3f64aa·v1';
@@ -1370,6 +1653,7 @@ function mapParams() {
   return { W, H, s, latC, tx: W / 2, ty: H / 2 + s * MY(latC) };
 }
 function startDive() {
+  sfx('whoosh');
   return new Promise(res => {
     const P = mapParams();
     cam.lon = ((cam.lon % 360) + 540) % 360 - 180;
@@ -2354,9 +2638,10 @@ function startPlay(tk) {
   if (phase !== 'menu') return;
   train = typeof tk === 'string' && TRAIN[tk] ? { k: tk, n: TRAIN[tk].n, steps: TRAIN[tk].steps, played: 0, good: 0, recent: [] } : null;
   document.body.classList.toggle('training', !!train);
-  closeTrain(); hideAbNote();
+  closeTrain(); sndPanelClose(); sndPopClose(); hideAbNote();
   renderScore();
   phase = 'cap';
+  sfx('start'); sndMusic(.55);
   fadeOut($('#menu'));
   $('#quitBtn').hidden = false;
   sceneMode = 'cap';
@@ -2414,6 +2699,7 @@ async function submitCap(skip) {
   if (!skip && !v) { capIn.focus(); return; }
   r.typed = v; r.capOk = !skip && matchCap(v, r.c); r.step = 'dive';
   showCapVerdict(r, v, false);
+  sfx(r.capOk ? 'good' : skip ? 'skip' : 'bad');
   // entraînement « nom de capitale » : on s'arrête là, pas de carte
   if (!onMap(r.steps)) { finishRound(); return; }
   layoutMap();
@@ -2498,6 +2784,7 @@ function nearLand(p) {
 }
 let seaT = 0;
 function seaHint() {
+  sfx('nope');
   clearTimeout(seaT);
   instr.innerHTML = '<span class="bad">Là c\'est la mer : clique sur un pays.</span>';
   instr.classList.remove('off', 'nudge'); void instr.offsetWidth; instr.classList.add('nudge');
@@ -2519,6 +2806,7 @@ svg.on('click', e => {
   }
   r.pending = { p, pt: m.pt, k: curT.k, ck: null };
   setMarkers([{ type: 'pin', cls: 'mk-pin', p }]);
+  sfx('pin');
   renderInstr();
 });
 function validate() {
@@ -2542,6 +2830,7 @@ async function evalCountry(pd) {
   const ok = countryOk(pd, k);
   r.ctyOk = ok; r.clicked = ok ? k : ck;
   r.step = 'zoom';
+  sfx(ok ? 'good' : 'bad');
   instr.classList.add('off');
   mapLayer.classList.remove('mode-country');
   if (ok && r.steps.has('place')) { focusPlace(r); return; }
@@ -2580,6 +2869,7 @@ function finishRound() {
     renderHist(); renderScore();
   }
   if (!onMap(S)) { showCapNext(); return; }
+  sfx('res' + r.lv, .45);   // le petit air du résultat, avec la carte qui s'affiche
   instr.classList.add('off'); vbtn.hidden = true;
   mapLayer.classList.remove('mode-country', 'mode-place');
   // fond plus sombre, point vert de la capitale et cercle violet du rayon accepté
@@ -2665,7 +2955,8 @@ function toMenu() {
   const wasMap = phase === 'map';
   round = null;
   // partie comptée quittée en plein pays : perdue
-  if (ab) recordAbandon({ k: ab.c.k, m: ab.m });
+  if (ab) { recordAbandon({ k: ab.c.k, m: ab.m }); sfx('bad'); }
+  sndMusic(1);
   train = null; document.body.classList.remove('training');
   renderHist(); renderScore();
   if (wasMap) leaveMap();
@@ -2702,7 +2993,7 @@ $('#abOk').onclick = hideAbNote;
 
 /* ---------- choix de l'entraînement ---------- */
 const trainPick = $('#trainPick'), trainBtn = $('#openTrain');
-function openTrain() { trainPick.hidden = false; trainBtn.setAttribute('aria-expanded', 'true'); $('#menu').classList.add('train-open'); }
+function openTrain() { sndPanelClose(); trainPick.hidden = false; trainBtn.setAttribute('aria-expanded', 'true'); $('#menu').classList.add('train-open'); }
 function closeTrain() { trainPick.hidden = true; trainBtn.setAttribute('aria-expanded', 'false'); $('#menu').classList.remove('train-open'); }
 trainBtn.onclick = () => { if (trainPick.hidden) { openTrain(); trainPick.querySelector('.t-opt').focus({ preventScroll: true }); } else closeTrain(); };
 $('#trainClose').onclick = () => { closeTrain(); trainBtn.focus({ preventScroll: true }); };
@@ -2791,7 +3082,7 @@ const listEl = $('#list'), grid = $('#grid'), search = $('#search');
 function openList() {
   if (phase !== 'menu') return;
   phase = 'list'; sceneMode = 'list';
-  hideAbNote(); closeTrain();
+  hideAbNote(); closeTrain(); sndPanelClose();
   fadeOut($('#menu'));
   tween(cam, { dim: 1 }, 450, E.sortie);
   renderStats(); renderRegions(); renderGrid(true);
@@ -2982,7 +3273,7 @@ makeFavicon();
 
 /* ---------- clavier ---------- */
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { if (openM) closeModal(); else if (phase === 'list') closeList(); else if (!trainPick.hidden) closeTrain(); else hideTip(); return; }
+  if (e.key === 'Escape') { if (!sndPop.hidden) sndPopClose(); else if (openM) closeModal(); else if (phase === 'list') closeList(); else if (!trainPick.hidden) closeTrain(); else if (!sndPick.hidden) sndPanelClose(); else hideTip(); return; }
   if (e.key === 'Enter' && !openM && !e.target.closest('input,textarea,button')) {
     if (round && round.pending) { e.preventDefault(); validate(); }
     else if (round && round.step === 'done') { e.preventDefault(); nextRound(); }
@@ -3491,7 +3782,7 @@ function dMessage(title, txt, code) {
 }
 function openDuel(code) {
   if (phase !== 'menu') return;
-  closeTrain(); hideAbNote();
+  closeTrain(); sndPanelClose(); hideAbNote();
   phase = 'duel'; sceneMode = 'list';
   fadeOut($('#menu'));
   tween(cam, { dim: 1 }, 450, E.sortie);
@@ -3554,6 +3845,8 @@ function dLobbyRender() {
   $('#dCode').textContent = S.code;
   $('#dLinkIn').value = dLink();
   $('#dCount').textContent = `${S.pl.length} / ${DMAX}`;
+  // quelqu'un vient d'arriver : un petit carillon
+  if (dSeenIds.size && S.pl.some(p => !dSeenIds.has(p.id))) sfx('join');
   // les joueurs dans des cases, et des cases libres pour ceux qui vont arriver
   const slots = S.pl.length > 7 ? DMAX : 8;
   let html = S.pl.map(p => `<li class="${p.on ? '' : 'off'}${p.id === duel.me ? ' me' : ''}${dSeenIds.has(p.id) ? '' : ' new'}">${avHtml(p)}
@@ -3615,6 +3908,11 @@ function dOnState() {
   if (!duel || !duel.S) return;
   const S = duel.S, prev = duel.lastPh;
   duel.lastPh = S.ph;
+  if (prev !== S.ph) {
+    if (S.ph === 'game') { if (prev === 'lobby') sfx('go'); sndMusic(.55); }
+    else if (S.ph === 'podium') sndMusic(.12);
+    else sndMusic(.85);
+  }
   // on garde les résultats de chaque étape : un joueur un peu lent les retrouve même si le chef est déjà plus loin
   if (S.ph === 'game' && S.g && S.g.sr) duel.srs[S.g.i + ':' + S.g.sr.st] = S.g.sr.r;
   dHud();
@@ -3721,6 +4019,7 @@ function dSubmitCap(skip) {
   const r = round, v = skip ? '' : capIn.value.trim();
   if (!skip && !v) { capIn.focus(); return; }
   r.typed = v; r.step = 'cap-wait'; r.sent.cap = true;
+  sfx('send');
   capIn.disabled = true; capIn.blur();
   $('#v1').textContent = 'Réponse envoyée';
   $('#v0').hidden = true;
@@ -3736,6 +4035,7 @@ async function dToCountry(r) {
   r.capOk = !!mine.ok; r.step = 'cap-wait';
   capBox.classList.remove('is-sent');
   showCapVerdict(r, r.typed, !r.sent.cap);
+  sfx(r.capOk ? 'good' : r.typed ? 'bad' : 'skip');
   dTimer();
   await wait(reduceMotion ? 500 : 1300);
   if (round !== r) return;
@@ -3751,9 +4051,11 @@ async function dToCountry(r) {
 function dEvalCountry(pd) {
   const r = round;
   r.step = 'country-wait'; r.sent.country = true; r.cpin = pd.p;
+  sfx('send');
   const kmpx = R * Math.cos(pd.p[1] * RAD) / (proj.scale() * (pd.k || 1));
   setSt({ sel: pd.ck || null, hov: null });
-  setMarkers([{ type: 'pin', cls: 'mk-pin', p: pd.p }]);
+  const me = dMe();
+  setMarkers([{ type: 'pin', cls: 'mk-pin pl me', p: pd.p, col: me ? PCOL[me.c] : null }]);
   mapLayer.classList.remove('mode-country');
   renderInstr();
   dSend({ i: r.i, st: 'country', a: { p: [pd.p[0], pd.p[1]], kmpx } });
@@ -3765,6 +4067,7 @@ async function dCountryDone(r, want) {
   r.ctyOk = !!mine.ok; r.pending = null; vbtn.hidden = true;
   mapLayer.classList.remove('mode-country');
   r.stage = 3;
+  sfx(r.ctyOk ? 'good' : want === 3 ? 'lost' : 'bad');
   if (r.ctyOk) {
     // bon pays : on zoome dessus, et on peut déjà cliquer pour placer la capitale pendant le zoom
     setMarkers([]); setSt({ sel: null, hov: null, ok: k }); setDim(1);
@@ -3779,12 +4082,16 @@ async function dCountryDone(r, want) {
   }
 }
 function dEvalPlace(p) {
-  const r = round;
+  const r = round, me = dMe();
   r.pin = p; r.step = 'place-wait'; r.sent.place = true;
-  dSend({ i: r.i, st: 'place', a: { p: [p[0], p[1]] } });
-  setMarkers([{ type: 'pin', cls: 'mk-pin', p }]);
+  sfx('send');
+  // l'épingle à ma couleur ; tout l'affichage AVANT l'envoi : chez le chef, si c'est la dernière réponse,
+  // le résultat de la manche arrive pendant l'envoi même (et ne doit pas être écrasé ensuite)
+  setMarkers([{ type: 'pin', cls: 'mk-pin pl me', p, col: me ? PCOL[me.c] : null }]);
   mapLayer.classList.remove('mode-place');
-  renderInstr(); dTimer();
+  renderInstr();
+  dSend({ i: r.i, st: 'place', a: { p: [p[0], p[1]] } });
+  if (round === r && r.step === 'place-wait') dTimer();
 }
 async function dToReveal(r) {
   dLostShow(false);
@@ -3803,6 +4110,7 @@ async function dToReveal(r) {
   setGeo(geo); setMarkers(mk);
   frameDone(r.c.p.concat(mk.filter(m => m.type === 'pin').map(m => m.p)), r.tol);
   dRevealCard(r);
+  const my = res[duel.me]; if (my) sfx('res' + my.s, .3);
 }
 function dRevealCard(r) {
   const S = duel.S, g = S.g, res = g.res || {}, c = r.c;
@@ -3843,7 +4151,7 @@ function dInstr() {
   mapLayer.classList.toggle('mode-place', st === 'place');
 }
 // compte à rebours : 7 s après le premier qui répond
-let dTick = 0;
+let dTick = 0, dTickLast = '';
 function dTimer() {
   clearInterval(dTick);
   const el = $('#dTimer'), lostT = $('#dLostT');
@@ -3861,6 +4169,8 @@ function dTimer() {
     el.hidden = false;
     el.classList.toggle('hot', mine);
     if (mine) el.innerHTML = `<b>${left}</b><span>s pour répondre</span>`;
+    // les 3 dernières secondes : tic, tic, tac
+    if (mine && left !== null && left <= 3 && left > 0 && dTickLast !== g.seq + ':' + left) { dTickLast = g.seq + ':' + left; sfx(left === 1 ? 'hot' : 'tick'); }
     else el.innerHTML = left !== null ? `<b>${left}</b><span>s · résultat à la fin du temps</span>` : `<span>Réponse envoyée · on attend ${waiting} joueur${waiting > 1 ? 's' : ''}…</span>`;
     el.style.setProperty('--p', (g.dl ? clamp01((g.dl - dNow()) / gW()) : 1).toFixed(3));
   };
@@ -4003,7 +4313,7 @@ function podStart(list) {
   requestAnimationFrame(() => POD.el.classList.add('on'));
   podResize();
   podGLInit();
-  podStars(); POD.parts = []; POD.waves = []; POD.fw = []; POD.stage = -1; POD.slammed = -1;
+  podStars(); POD.parts = []; POD.waves = []; POD.fw = []; POD.stage = -1; POD.slammed = -1; POD.warped = -1;
   POD.t0 = performance.now(); POD.last = POD.t0;
   spaceRun(false);
   POD.raf = requestAnimationFrame(podFrame);
@@ -4044,7 +4354,8 @@ function podFrame(now) {
   if (reduceMotion) speed = Math.min(speed, .05);
   const cy = top + R;
   POD.rot += dt / 1000 * PL.rot;
-  if (POD.stage !== P.si) { POD.stage = P.si; POD.rot = PL.rot0; POD.parts = []; POD.waves = []; POD.fw = []; }
+  if (POD.stage !== P.si) { POD.stage = P.si; POD.rot = PL.rot0; POD.parts = []; POD.waves = []; POD.fw = []; if (P.ph === 'appr' || P.ph === 'intro') sfx('appr'); }
+  if (P.ph === 'warp' && POD.warped !== P.si) { POD.warped = P.si; sfx('warp'); }
   // fond : étoiles (qui s'étirent à la vitesse de la lumière) et une lueur de la couleur de la planète
   const bx = POD.bg.getContext('2d');
   bx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -4073,6 +4384,7 @@ function podFrame(now) {
   const slamT = PODT.appr - 120;
   if (P.ph !== 'intro' && P.ts >= slamT && POD.slammed !== P.si) {
     POD.slammed = P.si;
+    sfx('slam', 0, pos);
     POD.waves.push({ t: now, c: mrgb });
     for (let i = 0; i < 46; i++) POD.parts.push({ x: cx + (Math.random() - .5) * 260, y: top - 4, vx: (Math.random() - .5) * 1.4, vy: -.6 - Math.random() * 2.2, life: 1, d: .006 + Math.random() * .01, r: 1 + Math.random() * 2.2, c: mrgb });
     if (P.last && pos === 1) { for (let k = 0; k < 5; k++) POD.fw.push({ at: now + 250 + k * 520, done: false }); podConfetti(cx, top); }
@@ -4097,7 +4409,7 @@ function podFrame(now) {
     fx.beginPath(); fx.ellipse(cx, top, rx, rx * .1, 0, 0, 2 * Math.PI); fx.stroke();
   }
   POD.waves = POD.waves.filter(w => now - w.t < 900);
-  for (const fwk of POD.fw) if (!fwk.done && now >= fwk.at) { fwk.done = true; podFirework(W * (.18 + Math.random() * .64), Hh * (.12 + Math.random() * .3)); }
+  for (const fwk of POD.fw) if (!fwk.done && now >= fwk.at) { fwk.done = true; sfx('pop'); podFirework(W * (.18 + Math.random() * .64), Hh * (.12 + Math.random() * .3)); }
   if (POD.parts.length) {
     const k = dt / 16.7;
     for (const p of POD.parts) {
